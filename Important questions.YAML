@@ -1,0 +1,920 @@
+- question_summary: "Create a service account, cluster role, and cluster role binding with full permissions in the default namespace."
+  skills_required:
+    - Manage Kubernetes contexts and set specific contexts for kubectl commands.
+    - Create and manage service accounts within a Kubernetes cluster.
+    - Define and assign cluster roles with specific permissions.
+    - Establish cluster role bindings to link roles with service accounts.
+  tips_and_commands:
+    - Note that to set the context for all kubectl commands, use `kubectl config use-context <context-name>`.
+    - Use `kubectl create serviceaccount <name>` to create a new service account.
+    - To create a cluster role with full permissions, use `kubectl create clusterrole <name> --resource=* --verb=*`.
+    - Bind a service account to a cluster role using `kubectl create clusterrolebinding <name> --clusterrole=<role-name> --serviceaccount=<namespace>:<service-account-name>`.
+
+- question_summary: "Identify and document the permissions of a specific service account."
+  skills_required:
+    - Retrieve and inspect the permissions associated with cluster roles.
+    - Write command outputs to a file within the Linux filesystem.
+  tips_and_commands:
+    - PS: Retrieve role permissions using `kubectl get clusterrole <name> -o json`.
+    - Note to write the output into a file, use redirections such as `echo "data" > /path/to/file`.
+
+- question_summary: "Backup an ETCD cluster running within a Kubernetes cluster."
+  skills_required:
+    - SSH into nodes within a cluster.
+    - Install necessary utilities like etcdctl on nodes.
+    - Perform backup operations using command line tools.
+  tips_and_commands:
+    - PS: Use `ssh <user>@<host>` to connect to nodes.
+    - To install the latest etcdctl, fetch the latest release from GitHub and install it locally.
+    - Backup ETCD using `etcdctl snapshot save <file-path>` with the appropriate flags for endpoints and security certificates.
+
+- question_summary: "Extract and save specific log entries from a Kubernetes pod."
+  skills_required:
+    - Filter logs of Kubernetes pods using grep for specific patterns.
+    - Manage log files and use redirections to store data.
+  tips_and_commands:
+    - Use `kubectl logs <pod-name> --context <context> | grep <pattern>` to filter logs.
+    - To save filtered logs into a file, use redirection `> /path/to/file`.
+
+- question_summary: "Update a shell script to add a command for displaying a specific Kubernetes label using jsonpath."
+  skills_required:
+    - Edit scripts in vi or another text editor.
+    - Use kubectl to fetch labels of Kubernetes resources using jsonpath queries.
+  tips_and_commands:
+    - Remember to use `kubectl get pod -o jsonpath='{.query}'` to extract data using jsonpath from Kubernetes resources.
+    - Edit files using `vi <filename>` to incorporate new shell commands.
+
+- question_summary: "Troubleshoot a non-functional Kubernetes deployment and ensure it's operational."
+  skills_required:
+    - Diagnose and fix issues related to resource configurations like volumes and configMaps.
+    - Use kubectl to inspect and modify deployments, pods, and other resources.
+  tips_and_commands:
+    - Check deployment status with `kubectl get deploy <name> -o yaml`.
+    - Ensure volume names in deployments match those in configMaps or other resources.
+    - Modify resources using `kubectl edit <resource> <name>`.
+
+- question_summary: "Enable a service account to perform specific operations on pods and secrets."
+  skills_required:
+    - Adjust role bindings and roles to modify access permissions for service accounts.
+    - Use kubectl to manage roles and rolebindings effectively.
+  tips_and_commands:
+    - To inspect role bindings, use `kubectl get rolebinding -o yaml`.
+    - Modify permissions by editing roles with `kubectl edit role <role-name>`.
+
+- question_summary: "Resolve issues causing a pod to be stuck in 'Pending' state due to PVC problems."
+  skills_required:
+    - Manage persistent volumes and persistent volume claims to resolve binding issues.
+    - Use kubectl to troubleshoot and edit PVCs and related resources.
+  tips_and_commands:
+    - Use `kubectl get pvc` and `kubectl get pv` to inspect volume claims and volumes.
+    - Edit and apply changes to PVC configurations with `kubectl edit pvc <name>` or recreate them to match specifications.
+
+- question_summary: "Troubleshoot and repair a failing Kubernetes deployment to ensure all pods are operational."
+  skills_required:
+    - Analyze and fix deployment-related issues such as incorrect volume claims, pod scheduling failures, and container start-up errors.
+    - Modify Kubernetes liveness probes and container commands to resolve errors.
+  tips_and_commands:
+    - To investigate deployment issues, start with `kubectl get pod`, followed by `kubectl logs <pod-name>` and `kubectl get events`.
+    - Correct misconfigurations in deployments by editing them with `kubectl edit deploy <name>`.
+
+- question_summary: "Resolve scaling issues with a Kubernetes deployment to ensure the desired number of replicas are running."
+  skills_required:
+    - Investigate and resolve issues with Kubernetes control plane components like the kube-controller-manager.
+    - Use SSH and command-line tools to diagnose and fix issues on Kubernetes nodes.
+  tips_and_commands:
+    - If a Kubernetes component is failing, check the logs and events using `kubectl get events`.
+    - Correct errors in system configurations directly on the nodes using SSH and text editors like vi.
+
+- question_summary: "Resolve a pod stuck in Pending state without changing its configuration but possibly recreating it."
+  skills_required:
+    - Troubleshoot and resolve scheduling issues due to node taints and affinity settings.
+    - Modify node labels to meet pod scheduling requirements.
+    - Understand and use Kubernetes selectors and labels effectively.
+  tips_and_commands:
+    - Note that to inspect events related to a specific pod, use `kubectl get event --field-selector involvedObject.name=<pod-name>`.
+    - To add or modify labels on a node, use `kubectl label node <node-name> <label-key>=<label-value>`.
+    - Check node affinity settings in the pod specification with `kubectl get pod <pod-name> -o yaml`.
+
+- question_summary: "Roll back a failed deployment update and adjust the deployment settings accordingly."
+  skills_required:
+    - Roll back to a previous deployment state using kubectl rollout commands.
+    - Adjust deployment configurations like image version and replica count.
+    - SSH into nodes to perform operations and save data locally.
+  tips_and_commands:
+    - Use `kubectl rollout undo <deployment>` to revert a deployment to its previous state.
+    - Modify the replica count of a deployment with `kubectl scale deployment <name> --replicas=<number>`.
+    - Save information into a file on a node using `echo "<data>" > <file-path>` after SSHing into the node.
+
+- question_summary: "Create a deployment with a specific image and scale it immediately during creation."
+  skills_required:
+    - Create and manage deployments using the kubectl command-line tool.
+    - Set initial replica counts for new deployments.
+  tips_and_commands:
+    - To create a deployment and set replicas at the same time, use `kubectl create deployment <name> --image=<image> --replicas=<number>`.
+    - Confirm the deployment and pods are correctly created using `kubectl get pods,deployments`.
+
+- question_summary: "Scale a deployment on a node with sufficient resources to handle increased load."
+  skills_required:
+    - Adjust the replica count of a deployment to scale up the application based on anticipated traffic.
+  tips_and_commands:
+    - Use `kubectl scale deployment <name> --replicas=<number>` to increase the number of replicas of a deployment.
+
+- question_summary: "Integrate a persistent volume claim into a pod definition and ensure the pod and PVC are correctly configured and running."
+  skills_required:
+    - Update YAML configurations for pods to include persistent volume claims.
+    - Apply updated configurations to Kubernetes via kubectl.
+  tips_and_commands:
+    - To link a PVC to a pod, ensure the volume mounts and PVC names are correctly referenced in the pod's YAML file.
+    - Apply changes using `kubectl apply -f <file.yaml>` to update or create resources.
+
+- question_summary: "Create a persistent volume claim to request a specific amount of storage from an existing persistent volume."
+  skills_required:
+    - Create PVCs with specified storage requirements and access modes.
+  tips_and_commands:
+    - Define PVCs using a YAML file specifying the required storage, access mode, and storage class.
+    - Apply the PVC using `kubectl apply -f <filename>.yaml`.
+
+- question_summary: "Troubleshoot and fix a non-functioning Kubernetes service meant to connect to an external webserver."
+  skills_required:
+    - Diagnose and resolve issues with Kubernetes services not properly routing traffic.
+    - Manually create and configure endpoints for services.
+  tips_and_commands:
+    - Use `kubectl describe svc <service-name>` to check for missing endpoints.
+    - Create endpoints manually if necessary using `kubectl apply -f <file>` with the endpoint configuration details.
+
+- question_summary: "Expose a deployment using a LoadBalancer service and verify its exposure within the Kubernetes cluster."
+  skills_required:
+    - Use kubectl to expose deployments directly via LoadBalancer services.
+    - Verify service exposure and load balancing settings.
+  tips_and_commands:
+    - To expose a deployment as a LoadBalancer, use `kubectl expose deployment <name> --type=LoadBalancer --name=<service-name> --port=<port>`.
+    - Confirm the service is exposed with `kubectl get svc -n <namespace>`.
+
+- question_summary: "Create and test internal DNS resolutions for a newly created pod and service using a specific lookup image."
+  skills_required:
+    - Create pods and services and expose them internally within a Kubernetes cluster.
+    - Perform DNS lookups within the cluster to test connectivity and name resolution.
+  tips_and_commands:
+    - Use `kubectl expose pod <pod-name> --name=<service-name> --port=<port>` to create a service for a pod.
+    - Test DNS resolution using a busybox image with `kubectl run --image=busybox -- nslookup <service-name>`.
+
+- question_summary: "Create a ClusterIP service to expose specific pods and document pod IPs in a sorted order by their IP addresses."
+  skills_required:
+    - Configure ClusterIP services using specific selectors to target particular pods.
+    - Retrieve and record pod details in a structured format using kubectl output options.
+  tips_and_commands:
+    - To expose pods via a ClusterIP service, use selectors that match the labels of the target pods.
+    - Output and sort pod details using `kubectl get pods -o=custom-columns='POD_NAME:.metadata.name,IP_ADDR:.status.podIP' --sort-by=.status.podIP`.
+
+- question_summary: "Create a service account, cluster role, and cluster role binding to allow access to deployments in a cluster."
+  skills_required:
+    - Manage service accounts, roles, and role bindings to control resource access in Kubernetes.
+    - Use kubectl to create and bind roles with specific permissions to service accounts.
+  tips_and_commands:
+    - Use `kubectl create serviceaccount <name>` to create a service account.
+    - Create a cluster role for specific resources and verbs with `kubectl create clusterrole <name> --resource=<resources> --verb=<verbs>`.
+    - Bind a cluster role to a service account using `kubectl create clusterrolebinding <name> --clusterrole=<role-name> --serviceaccount=<namespace>:<service-account-name>`.
+    - To verify permissions, use `kubectl auth can-i <action> <resource> --as=system:serviceaccount:<namespace>:<service-account-name>`.
+
+- question_summary: "Identify the node with the highest CPU usage across multiple clusters and record the result."
+  skills_required:
+    - Use kubectl to retrieve and sort node metrics across different contexts to find the highest usage.
+    - Directly write command output to a file in the Linux file system.
+  tips_and_commands:
+    - Use `kubectl top node --context <context-name> --no-headers | sort -nr -k2 | head -1` to find the node with the highest CPU usage per cluster.
+    - Redirect the result into a file using `echo <cluster-name>,<node-name> > <file-path>`.
+
+- question_summary: "Identify the pod with the highest memory usage across multiple clusters and store the result."
+  skills_required:
+    - Retrieve and analyze pod resource usage data using kubectl in multiple cluster contexts.
+    - Sort and process data to determine the highest resource usage.
+  tips_and_commands:
+    - To get top memory-consuming pods across clusters, use `kubectl top pods -A --context <context-name> --no-headers | sort -nr -k4 | head -1`.
+    - Record the findings in a file with `echo <cluster-name>,<namespace>,<pod-name> > <file-path>`.
+
+- question_summary: "Create a secret in Kubernetes from a file."
+  skills_required:
+    - Create Kubernetes secrets from files to store sensitive data securely.
+  tips_and_commands:
+    - Use `kubectl create secret generic <secret-name> --from-file=<file-path>` to create a secret from a file.
+
+- question_summary: "Add a sidecar container to a pod to handle logging without impacting the main application's performance."
+  skills_required:
+    - Edit existing pod configurations to add sidecar containers.
+    - Manage multi-container pod configurations for logging purposes.
+  tips_and_commands:
+    - To add a sidecar container for logging, update the pod definition to include a new container with `tail -f <log-file>` command using an appropriate image.
+    - Use `kubectl replace -f <file-path> --force` to update the pod with new configurations.
+
+- question_summary: "Troubleshoot a non-starting pod in a Kubernetes deployment and correct environment variable issues."
+  skills_required:
+    - Diagnose and fix issues in Kubernetes deployments affecting pod startup.
+    - Edit deployments to correct environment variable references and secret key mismatches.
+  tips_and_commands:
+    - Use `kubectl logs <pod-name>` and `kubectl get events --field-selector involvedObject.name=<pod-name>` to identify issues.
+    - Modify environment variables and secret keys in deployments using `kubectl edit deployment <deployment-name>`.
+
+- question_summary: "Enable a service account to perform specific operations on resources in a namespace."
+  skills_required:
+    - Adjust role bindings and roles to modify access permissions for service accounts.
+  tips_and_commands:
+    - To inspect and edit role bindings, use `kubectl get rolebinding -o yaml` and `kubectl edit role <role-name>`.
+    - Configure role permissions properly to ensure service accounts have the necessary access.
+
+- question_summary: "Resolve deployment creation errors due to missing namespace and ensure successful pod deployment."
+  skills_required:
+    - Identify and fix errors related to Kubernetes namespaces and deployment configurations.
+  tips_and_commands:
+    - Check for missing namespaces using `kubectl get ns` and create necessary namespaces with `kubectl create ns <namespace-name>`.
+    - Apply deployment configurations with `kubectl apply -f <file-name>` and ensure pods are running using `kubectl get pod -n <namespace-name>`.
+
+- question_summary: "Correct template errors in a Kubernetes pod to ensure it is stable and not crashing."
+  skills_required:
+    - Edit Kubernetes pod templates to correct liveness probes and other configuration errors.
+  tips_and_commands:
+    - Modify probe types and settings in pod definitions to ensure correct operation.
+    - Apply template changes and monitor pod stability using `kubectl get pod` and `kubectl get events --field-selector involvedObject.name=<pod-name>`.
+
+- question_summary: "Troubleshoot and fix a scheduling issue with a pod stuck in Pending state due to kube-scheduler errors."
+  skills_required:
+    - Diagnose and resolve issues with Kubernetes system components like the kube-scheduler affecting pod scheduling.
+  tips_and_commands:
+    - Check logs and statuses of system pods using `kubectl logs <pod-name> -n <namespace>` and `kubectl get pod -n <namespace>`.
+    - Correct misconfigurations in system component manifests and ensure proper file paths and settings.
+
+- question_summary: "Ensure a DaemonSet is correctly deploying pods on all nodes, including the control plane node, by adjusting tolerations."
+  skills_required:
+    - Modify DaemonSet configurations to include necessary tolerations for scheduling on all nodes.
+  tips_and_commands:
+    - Use `kubectl edit ds <daemonset-name> -n <namespace>` to add tolerations enabling scheduling on control plane nodes.
+    - Verify pod distribution and node scheduling with `kubectl get pod -o wide -n <namespace>`.
+
+- question_summary: "Inspect a specific revision of a Kubernetes deployment and record the used image."
+  skills_required:
+    - Inspect historical revisions of deployments to extract configuration details.
+    - Use shell commands to store specific data into a file.
+  tips_and_commands:
+    - Use `kubectl rollout history deployment <name> --revision=<number>` to inspect a specific revision.
+    - Store data into a file using `echo "<data>" > <file-path>`.
+
+- question_summary: "Create and scale a deployment in Kubernetes."
+  skills_required:
+    - Create deployments and manage their replica counts using kubectl.
+  tips_and_commands:
+    - To create a deployment with an initial replica count, use `kubectl create deployment <name> --image=<image> --replicas=<number>`.
+    - Verify the deployment and its pods with `kubectl get pods,deployments`.
+
+- question_summary: "Rollback a Kubernetes deployment to a previous version and adjust deployment settings."
+  skills_required:
+    - Rollback deployments to previous revisions.
+    - Save deployment configuration data to a file and adjust replica counts.
+  tips_and_commands:
+    - Use `kubectl rollout undo deployment <name> --to-revision=<number>` to rollback a deployment.
+    - To increase replicas, use `kubectl scale deployment <name> --replicas=<number>`.
+
+- question_summary: "Resize a Persistent Volume Claim and ensure it remains in a bound state."
+  skills_required:
+    - Adjust the size of PVCs and ensure they are correctly bound to Persistent Volumes.
+  tips_and_commands:
+    - Before resizing a PVC, ensure the associated PV has sufficient capacity and is configured to allow resizing.
+    - Use `kubectl edit pvc <name>` to change the storage request.
+
+- question_summary: "Create a storage class in Kubernetes with specific properties."
+  skills_required:
+    - Define and create storage classes that control volume provisioning behavior.
+  tips_and_commands:
+    - Use `kubectl apply -f <filename>` to create a storage class from a YAML definition.
+    - Ensure the `allowVolumeExpansion`, `volumeBindingMode`, and `provisioner` fields are set according to requirements.
+
+- question_summary: "Set up a pod for DNS resolution testing and record the output."
+  skills_required:
+    - Create and configure pods for specific tasks like DNS resolution.
+    - Capture and store command outputs from within pods.
+  tips_and_commands:
+    - To test DNS resolution from a pod, use `kubectl exec <pod-name> -- nslookup <service-name>`.
+    - Use redirection `>` to write command output to a file.
+
+- question_summary: "Expose a Kubernetes deployment through a LoadBalancer service."
+  skills_required:
+    - Use kubectl to expose deployments externally via LoadBalancer services.
+  tips_and_commands:
+    - To expose a deployment, use `kubectl expose deployment <name> --type=LoadBalancer --name=<service-name> --port=<port>`.
+
+- question_summary: "Create a ClusterIP service to expose specific pods and record pod IPs in a structured format."
+  skills_required:
+    - Configure ClusterIP services using selectors to target specific pods.
+    - Extract and save pod details in a structured format.
+  tips_and_commands:
+    - Use `kubectl get pods -o=custom-columns='POD_NAME:.metadata.name,IP_ADDR:.status.podIP' --sort-by=.status.podIP` to list and sort pods by IP address.
+    - Store output in a file with redirection `>`.
+
+- question_summary: "Create and test internal DNS resolutions for a Kubernetes service and pod."
+  skills_required:
+    - Configure and verify DNS settings within a Kubernetes cluster.
+    - Record DNS lookup results for services and pods.
+  tips_and_commands:
+    - Use `kubectl expose pod <pod-name> --name=<service-name>` to create a service.
+    - Perform DNS lookups using a DNS utilities pod and record the results.
+
+- question_summary: "Create a generic secret in a specific namespace with given key/value pairs."
+  skills_required:
+    - Create secrets to securely store and manage sensitive information in Kubernetes.
+  tips_and_commands:
+    - Use `kubectl create secret generic <secret-name> --from-literal=<key>=<value> -n <namespace>` to create a secret with specific data.
+
+- question_summary: "Backup an ETCD cluster running as a pod and store it on the controlplane node."
+  skills_required:
+    - Perform SSH access to controlplane nodes and manage Kubernetes components such as ETCD.
+    - Install necessary utilities and execute backup operations.
+  tips_and_commands:
+    - To install and use etcdctl for backups, download the latest release from the official ETCD GitHub page and move the executables to a system path.
+    - Use `etcdctl snapshot save` command with proper TLS certificates to backup ETCD data.
+
+- question_summary: "Run a pod using the busybox image that executes a given command indefinitely."
+  skills_required:
+    - Define and manage pods using YAML configurations and imperative commands.
+  tips_and_commands:
+    - To create a continuously running pod, define the container command in the pod specification using the format `command: ["/bin/sh", "-c", "<command>"]`.
+
+- question_summary: "Install the ETCD utility on a Kubernetes controlplane node to manage ETCD backups and restores."
+  skills_required:
+    - Perform basic node management tasks such as installing software directly on Kubernetes nodes via SSH.
+  tips_and_commands:
+    - Use `wget` to download software directly to a node, and ensure the executable is placed in a location included in the system's PATH.
+
+- question_summary: "Add a sidecar container to a pod for log tailing without affecting the main application's performance."
+  skills_required:
+    - Configure multi-container pods to include sidecar containers that perform auxiliary tasks like log monitoring.
+  tips_and_commands:
+    - Define both the primary and sidecar containers within the same pod definition to share the pod's resources, including volumes for log files.
+
+- question_summary: "Resolve issues with a persistent volume claim that is stuck in a pending state."
+  skills_required:
+    - Troubleshoot and adjust PVC requests to match the specifications of available PVs or the conditions set on them.
+  tips_and_commands:
+    - Adjust the PVC's storage request to be within the capacity of the available PVs and ensure it matches the access modes and other constraints.
+
+- question_summary: "Troubleshoot and fix a pod that is stuck in a Pending state due to issues with a PVC."
+  skills_required:
+    - Diagnose and resolve PVC binding issues to ensure pods can start properly.
+  tips_and_commands:
+    - Inspect events related to the PVC and pod to understand why binding isn't occurring and adjust the PVC or related resources accordingly.
+
+- question_summary: "Troubleshoot and resolve issues causing a pod to crash continuously."
+  skills_required:
+    - Diagnose pod and container failures using logs and Kubernetes commands.
+    - Correct misconfigurations in pod definitions, especially those related to container images and commands.
+  tips_and_commands:
+    - Use `kubectl logs` to get output from crashing containers and `kubectl edit` to fix configuration issues directly.
+
+- question_summary: "Access an application through an incorrectly configured Ingress and fix the related issues."
+  skills_required:
+    - Troubleshoot and correct Ingress resource configurations to properly route external traffic to cluster services.
+  tips_and_commands:
+    - Use `kubectl edit ingress` to update hostnames and backend service information ensuring traffic is correctly routed according to Ingress rules.
+
+- question_summary: "Address a Kubernetes scheduler configuration issue that is preventing a pod from being scheduled."
+  skills_required:
+    - Troubleshoot and resolve configuration errors in Kubernetes system components such as the scheduler.
+  tips_and_commands:
+    - Use logs from the kube-scheduler to identify configuration errors and correct file paths or settings in the scheduler's manifest files.
+
+- question_summary: "Troubleshoot a pod stuck in a Pending state due to taints and fix it without removing existing taints."
+  skills_required:
+    - Manage taints and tolerations to control pod scheduling on specific nodes.
+  tips_and_commands:
+    - Adjust tolerations in a pod's specification to allow it to be scheduled on nodes with specific taints.
+
+- question_summary: "Inspect a Kubernetes deployment's past revision and record specific details about it."
+  skills_required:
+    - Use Kubernetes' rollout history and revision inspection features to review past states of a deployment.
+  tips_and_commands:
+    - Record specific details from a deployment's revision into a file for documentation or audit purposes using shell redirection.
+
+- question_summary: "Deploy a pod and fix a manifest file that prevents it from being deployed due to resource request and limit mismatches."
+  skills_required:
+    - Correct errors in pod or container configurations that prevent them from being scheduled due to resource constraints.
+  tips_and_commands:
+    - Adjust resource requests and limits in the pod's manifest file to ensure they are compatible and meet cluster scheduling requirements.
+
+- question_summary: "Scale a deployment in a cluster to handle increased traffic."
+  skills_required:
+    - Use Kubernetes commands to scale applications to meet changing load demands.
+  tips_and_commands:
+    - Increase a deployment's replica count to distribute traffic more effectively across multiple pods.
+
+- question_summary: "Create a storage class and a persistent volume with specific characteristics, and bind them using a PVC."
+  skills_required:
+    - Configure storage in Kubernetes using StorageClasses, Persistent Volumes, and Persistent Volume Claims.
+  tips_and_commands:
+    - Ensure compatibility between PVs, PVCs, and StorageClasses to facilitate proper binding and storage provisioning.
+
+- question_summary: "Create a Persistent Volume Claim and request storage from a specific Persistent Volume."
+  skills_required:
+    - Manage Kubernetes storage using PVCs and ensure they correctly bind to specified PVs.
+  tips_and_commands:
+    - Define a PVC with a specific storage request, access mode, and link it to an existing PV ensuring the storage class and other parameters match.
+
+- question_summary: "Create an Ingress resource to manage external access to services within a Kubernetes cluster."
+  skills_required:
+    - Configure Ingress resources to provide external users access to internal services while adhering to specified routing rules.
+  tips_and_commands:
+    - Set path types and backend configurations accurately to ensure that Ingress routes traffic correctly to the intended services.
+
+- question_summary: "Expose a Kubernetes deployment externally using a LoadBalancer service."
+  skills_required:
+    - Use services of type LoadBalancer to expose deployments to external traffic.
+  tips_and_commands:
+    - Create a LoadBalancer service to automatically provision external IP addresses that facilitate access to services.
+
+- question_summary: "Create and test DNS resolution settings within a Kubernetes cluster."
+  skills_required:
+    - Configure and verify internal DNS settings for Kubernetes services to ensure proper network communication.
+  tips_and_commands:
+    - Use DNS debugging tools within the cluster to validate name resolution configurations.
+
+- question_summary: "Create a secret within a specific namespace using key/value pairs."
+  skills_required:
+    - Securely manage sensitive configuration data using Kubernetes Secrets.
+  tips_and_commands:
+    - Use `kubectl create secret` with the `--from-literal` option to specify key/value pairs directly on the command line.
+
+- question_summary: "Create a ClusterIP service in the 'spectra-1267' namespace to expose specific pods."
+  skills_required:
+    - Configuring Kubernetes Services to manage pod traffic within a cluster.
+  tips_and_commands:
+    - Use `kubectl create service clusterip` to create a ClusterIP service.
+    - Utilize label selectors to target specific pods.
+    - Specify the port and target port to manage traffic flow to the pods.
+
+- question_summary: "Modify a shell script to add a Kubernetes command for retrieving pod labels."
+  skills_required:
+    - Manipulating shell scripts to automate Kubernetes commands.
+    - Using JSONPath to extract specific data from Kubernetes resources.
+  tips_and_commands:
+    - Insert `kubectl get pod -o jsonpath='{.metadata.labels.<label>}'` into the script to retrieve the desired label.
+    - Test the script changes to ensure correct execution and output.
+
+- question_summary: "Create and bind Kubernetes RBAC resources to grant permissions."
+  skills_required:
+    - Managing Kubernetes RBAC policies to control access to resources.
+  tips_and_commands:
+    - Create a service account using `kubectl create serviceaccount`.
+    - Define a cluster role with `kubectl create clusterrole --resource=* --verb=*`.
+    - Bind the service account to the cluster role using `kubectl create clusterrolebinding`.
+
+- question_summary: "Backup the ETCD datastore from a Kubernetes cluster."
+  skills_required:
+    - Performing ETCD backup operations to ensure data integrity and disaster recovery.
+  tips_and_commands:
+    - Use `etcdctl snapshot save` to create a backup of the ETCD datastore.
+    - Install `etcdctl` if it is not available on the system.
+    - Ensure all paths and permissions for ETCD certificates and keys are correctly specified.
+
+- question_summary: "Decode a Kubernetes secret and save its contents."
+  skills_required:
+    - Handling Kubernetes secrets for configuration and sensitive data management.
+  tips_and_commands:
+    - Use `kubectl get secret <name> -o jsonpath='{.data}'` to retrieve the encoded data.
+    - Decode the data with `base64 -d` and redirect to a file.
+
+- question_summary: "Troubleshoot and resolve deployment issues in Kubernetes."
+  skills_required:
+    - Diagnosing and resolving issues with Kubernetes deployments to ensure application availability.
+  tips_and_commands:
+    - Utilize `kubectl get` and `kubectl describe` to identify issues.
+    - Check for common errors like image pull failures, resource limits, and dependency configurations.
+
+- question_summary: "Adjust permissions for a service account to access deployments."
+  skills_required:
+    - Configuring Kubernetes service accounts and permissions for specific namespace operations.
+  tips_and_commands:
+    - Review and edit roles with `kubectl edit role`.
+    - Use `kubectl auth can-i` to verify permissions after adjustments.
+
+- question_summary: "Fix issues in a pod template and ensure it deploys successfully."
+  skills_required:
+    - Correcting Kubernetes pod templates to resolve configuration errors.
+  tips_and_commands:
+    - Modify liveness and readiness probes to match the application's needs.
+    - Ensure container ports and paths are correctly set.
+
+- question_summary: "Correct Persistent Volume and Persistent Volume Claim settings."
+  skills_required:
+    - Managing Kubernetes storage with PVs and PVCs to ensure correct data persistence configurations.
+  tips_and_commands:
+    - Adjust storage requests in PVCs or capacities in PVs to match.
+    - Reapply the configuration after making changes to the storage settings.
+
+- question_summary: "Enable a pod to schedule on a tainted node."
+  skills_required:
+    - Configuring pod tolerations in Kubernetes to work with node taints.
+  tips_and_commands:
+    - Use `kubectl taint` to manage node taints.
+    - Modify the pod's toleration settings to match the node's taints.
+
+- question_summary: "Inspect a pod and save all its logs to a file on the student-node."
+  skills_required:
+    - Managing pod logs using Kubernetes commands.
+  tips_and_commands:
+    - Use `kubectl logs <pod-name> --context <cluster-name> > /path/to/file` to save logs to a file.
+
+- question_summary: "Run a pod with a specific command in a loop using the BusyBox image."
+  skills_required:
+    - Deploying pods with specific commands in Kubernetes.
+  tips_and_commands:
+    - Use `kubectl apply -f <file.yaml>` where the YAML file specifies the pod configuration including the command to run in a loop.
+
+- question_summary: "Update permissions for a service account to restrict it to accessing pods only."
+  skills_required:
+    - Modifying RBAC settings in Kubernetes for specific resource access.
+  tips_and_commands:
+    - Use `kubectl edit clusterrole <name>` to modify the permissions of a role.
+    - Validate permissions with `kubectl auth can-i <action> <resource> --as=<service-account>`.
+
+- question_summary: "Identify the highest CPU-consuming pod across all clusters and save its details."
+  skills_required:
+    - Monitoring and managing resource usage in Kubernetes pods.
+  tips_and_commands:
+    - Use `kubectl top pods -A --context <cluster-name>` to view resource usage.
+    - Use sorting and filtering commands in Unix to identify the highest usage.
+
+- question_summary: "Create a secret from a file on the student-node within a Kubernetes cluster."
+  skills_required:
+    - Securely managing sensitive configuration data using Kubernetes Secrets.
+  tips_and_commands:
+    - Use `kubectl create secret generic <secret-name> --from-file=<file-path>` to create a secret from a file.
+
+- question_summary: "Troubleshoot and fix a deployment issue causing pod unavailability."
+  skills_required:
+    - Debugging deployments and resolving pod issues in Kubernetes.
+  tips_and_commands:
+    - Use `kubectl get events --field-selector involvedObject.name=<pod-name>` to investigate issues.
+    - Check and edit configurations using `kubectl edit <resource> <name>`.
+
+- question_summary: "Stabilize a crashing pod within a Kubernetes deployment."
+  skills_required:
+    - Diagnosing and fixing crashing pods in Kubernetes environments.
+  tips_and_commands:
+    - Examine pod logs using `kubectl logs -f <pod-name>` to understand crash causes.
+    - Adjust pod resource limits or configurations as necessary.
+
+- question_summary: "Fix a service account's access issues to enable it to retrieve pod information."
+  skills_required:
+    - Adjusting RBAC policies to correct permissions issues in Kubernetes.
+  tips_and_commands:
+    - Modify a ClusterRole using `kubectl edit clusterrole <name>`.
+    - Test permissions with `kubectl auth can-i`.
+
+- question_summary: "Update a pod definition to include a Persistent Volume Claim and verify its successful mounting and operation."
+  skills_required:
+    - Integrating Persistent Volume Claims with pods for storage in Kubernetes.
+  tips_and_commands:
+    - Use `kubectl apply -f <yaml-file>` to apply updated pod configurations.
+    - Ensure the PVC and PV are correctly bound and the storage mounts successfully.
+
+- question_summary: "Create a storage class with specific characteristics and deploy it within a Kubernetes cluster."
+  skills_required:
+    - Configuring and deploying storage classes in Kubernetes to manage storage provisioning.
+  tips_and_commands:
+    - Define a StorageClass resource in YAML format with specified provisioning properties and apply it using `kubectl apply -f <file>`.
+
+- question_summary: "Expose a deployment as a service within a Kubernetes cluster using a LoadBalancer."
+  skills_required:
+    - Managing network exposure of Kubernetes deployments through services.
+  tips_and_commands:
+    - Use `kubectl expose deployment <name> --type=LoadBalancer --port=<port>` to create a service that acts as a LoadBalancer.
+
+- question_summary: "Troubleshoot and fix connectivity issues with a service designed to access an external webserver."
+  skills_required:
+    - Diagnosing and solving networking and connectivity issues in Kubernetes.
+  tips_and_commands:
+    - Check service definitions and endpoints.
+    - Correctly map external IPs and ports using Endpoints resources if necessary.
+
+- question_summary: "Create a ClusterIP service to expose specific pods and list their IPs."
+  skills_required:
+    - Configuring Kubernetes services to expose pods within a cluster.
+  tips_and_commands:
+    - Use `kubectl create service clusterip <service-name> -n <namespace> --tcp=<port>:<targetport>` and specify labels for pod selection.
+
+- question_summary: "Create a deployment and expose it using NodePort service."
+  skills_required:
+    - Setting up deployments and exposing them through NodePort services in Kubernetes.
+  tips_and_commands:
+    - Use `kubectl create deployment` and `kubectl expose deployment <name> --type=NodePort --port=<container-port>` to expose it externally.
+
+- question_summary: "Fix a LoadBalancer service exposure for a web application."
+  skills_required:
+    - Managing external traffic routing to Kubernetes services using LoadBalancer type.
+  tips_and_commands:
+    - Ensure the correct deployment is exposed by checking the service details with `kubectl describe service <name>`.
+
+- question_summary: "Inspect a deployment's revision and extract configuration details."
+  skills_required:
+    - Managing and inspecting Kubernetes deployment revisions.
+  tips_and_commands:
+    - Use `kubectl rollout history deployment <name> --revision=<number>` to inspect specific revision details.
+
+- question_summary: "Deploy a pod from a manifest file and fix any configuration issues."
+  skills_required:
+    - Deploying and troubleshooting Kubernetes pods using YAML manifests.
+  tips_and_commands:
+    - Correct common manifest errors such as resource limits and apply the configuration with `kubectl apply -f <file>`.
+
+- question_summary: "Scale a deployment to handle increased load."
+  skills_required:
+    - Scaling Kubernetes deployments to increase pod replicas.
+  tips_and_commands:
+    - Use `kubectl scale deployment <name> --replicas=<number>` to adjust the number of replicas.
+
+- question_summary: "Troubleshoot and correct issues with a Kubernetes ingress resource."
+  skills_required:
+    - Managing Kubernetes Ingress resources to control access to services.
+  tips_and_commands:
+    - Check and edit ingress configurations using `kubectl edit ingress <name>` to correct hostnames and service mappings.
+
+- question_summary: "Troubleshoot a DaemonSet not deploying pods on certain nodes."
+  skills_required:
+    - Understanding and fixing node affinity and tolerations issues affecting DaemonSet deployments.
+  tips_and_commands:
+    - Adjust the DaemonSet configuration to include necessary tolerations with `kubectl edit ds <name>` to ensure it schedules on all desired nodes.
+- question_summary: "Create a service account and associated cluster role with permissions to get deployments in cluster1."
+  skills_required:
+    - Creating and managing service accounts in Kubernetes.
+    - Setting up ClusterRoles to specify permissions on resources.
+    - Binding ClusterRoles to service accounts using ClusterRoleBindings.
+  tips_and_commands:
+    - Use `kubectl create serviceaccount <name>` to create a service account.
+    - Use `kubectl create clusterrole <name> --resource=deployments --verb=get` to create a ClusterRole with specific permissions.
+    - Use `kubectl create clusterrolebinding <name> --clusterrole=<role-name> --serviceaccount=default:<sa-name>` to bind the ClusterRole to the service account.
+
+- question_summary: "Inspect a pod for all 'INFO' and 'ERROR' logs and save to a file."
+  skills_required:
+    - Retrieving and managing logs from Kubernetes pods.
+  tips_and_commands:
+    - Use `kubectl logs <pod-name> --context <context-name>` to retrieve logs.
+    - Redirect logs to a file using `> <filename>` for analysis or reporting.
+
+- question_summary: "Run a pod called alpine-sleeper-cka15-arch using the Alpine image that sleeps for 7200 seconds."
+  skills_required:
+    - Creating and managing pods directly with YAML files or command line.
+  tips_and_commands:
+    - Define the pod in a YAML file with the necessary image and command to execute.
+    - Use `kubectl apply -f <filename>` to deploy the pod.
+
+- question_summary: "Create a generic secret called db-user-pass-cka17-arch using the contents of a file."
+  skills_required:
+    - Using Kubernetes Secrets to manage sensitive configuration data securely.
+  tips_and_commands:
+    - Use `kubectl create secret generic <secret-name> --from-file=<file-path>` to create a secret from a file.
+
+- question_summary: "Find the pod that consumes the most memory and store the result."
+  skills_required:
+    - Monitoring and optimizing resource usage within a Kubernetes cluster.
+  tips_and_commands:
+    - Use `kubectl top pods -A --sort-by='memory'` to find pods by memory usage.
+    - Redirect the output to a file using `> <filename>` to store the highest memory usage details.
+
+- question_summary: "Troubleshoot a continuously crashing pod and ensure it runs stably."
+  skills_required:
+    - Analyzing and resolving common pod deployment issues in Kubernetes.
+  tips_and_commands:
+    - Check pod logs with `kubectl logs <pod-name>` for errors.
+    - Investigate events associated with the pod using `kubectl get events --field-selector involvedObject.name=<pod-name>`.
+
+- question_summary: "Troubleshoot a Kubernetes deployment ensuring all required pods are running."
+  skills_required:
+    - Diagnosing issues related to pod scheduling and runtime failures.
+  tips_and_commands:
+    - Use `kubectl describe pod <pod-name>` to get detailed info about pod issues.
+    - Resolve resource limits issues and apply updates with `kubectl apply -f <deployment-file>`.
+
+- question_summary: "Correct a service account's permissions to enable deployment viewing under the default namespace."
+  skills_required:
+    - Managing Kubernetes RBAC to control resource access within namespaces.
+  tips_and_commands:
+    - Use `kubectl edit clusterrole <role-name>` to modify permissions.
+    - Ensure that the correct ClusterRoleBinding links the ClusterRole to the service account.
+
+- question_summary: "Troubleshoot and enable connectivity to a Kubernetes-deployed application."
+  skills_required:
+    - Debugging service exposure issues to ensure applications are accessible.
+  tips_and_commands:
+    - Verify service configuration with `kubectl get svc <service-name> -o yaml`.
+    - Adjust labels in the deployment or service to ensure correct linkage.
+
+- question_summary: "Ensure a DaemonSet's pods are deployed on all nodes, including control plane nodes."
+  skills_required:
+    - Configuring and managing DaemonSets to automate pod deployment on all nodes.
+  tips_and_commands:
+    - Add necessary tolerations to the DaemonSet configuration with `kubectl edit ds <daemonset-name>`.
+    - Check node taints with `kubectl get nodes -o json | jq '.items[].spec.taints'` and adjust tolerations accordingly.
+
+- question_summary: "Deploy a pod from a faulty manifest file and ensure it is running without changing resource limits."
+  skills_required:
+    - Correcting and deploying Kubernetes pod configurations from YAML manifests.
+  tips_and_commands:
+    - Adjust `resources.requests` to be less than or equal to `resources.limits` in the pod definition file.
+    - Deploy with `kubectl create -f <file>` after making corrections.
+
+- question_summary: "Inspect a deployment's revision and record the image used in that revision."
+  skills_required:
+    - Using Kubernetes deployment strategies to manage application versions and configurations.
+  tips_and_commands:
+    - Use `kubectl rollout history deployment <name> --revision=<number>` to inspect specific revisions.
+    - Save relevant data to a file using echo commands for documentation or auditing purposes.
+- question_summary: "Update a web application on cluster1 to version 2."
+  skills_required:
+    - Performing image updates in Kubernetes deployments.
+    - Verifying pod deployments using HTTP requests.
+  tips_and_commands:
+    - Use `kubectl set image deployment/frontend-wl04 frontend-wl04=<new-image>:v2` to update the image.
+    - Verify the application by running `curl http://cluster1-node01:30080`.
+
+- question_summary: "Create a storage class in Kubernetes with specific parameters."
+  skills_required:
+    - Creating and managing storage classes in Kubernetes.
+  tips_and_commands:
+    - Use the provided YAML template to define a StorageClass with specific attributes.
+    - Apply the YAML file with `kubectl apply -f <template-file-name>.yaml` to create the storage class.
+
+- question_summary: "Create a pod that shares a volume between two containers."
+  skills_required:
+    - Managing pods with multi-container configurations.
+    - Configuring shared volumes using the emptyDir type.
+  tips_and_commands:
+    - Define both containers in the pod's YAML file with a shared volume mount.
+    - Use `kubectl apply -f <template-file-name>.yaml` to create the pod.
+
+- question_summary: "Create and expose a ClusterIP service in Kubernetes."
+  skills_required:
+    - Using labels and selectors to manage Kubernetes services.
+    - Creating and managing ClusterIP services.
+  tips_and_commands:
+    - Use `kubectl create service clusterip <service-name> --tcp=<port>:<target-port>` to create a ClusterIP service.
+    - Store sorted pod names and IPs with `kubectl get pods -o=custom-columns='POD_NAME:.metadata.name,IP_ADDR:.status.podIP' --sort-by=.status.podIP`.
+
+- question_summary: "Create a pod in a specific namespace and record DNS lookup results."
+  skills_required:
+    - Pod creation and namespace management in Kubernetes.
+    - Executing and recording DNS lookups from pods.
+  tips_and_commands:
+    - Create the pod with `kubectl apply -f <pod-definition>.yaml`.
+    - Execute DNS lookup with `kubectl exec -it <pod-name> -- nslookup kubernetes.default`.
+    - Redirect output to a file with `> <filename>`.
+
+- question_summary: "Expose an Nginx pod with a service and test DNS resolution within Kubernetes."
+  skills_required:
+    - Creating and exposing pods with Kubernetes services.
+    - Performing network diagnostics within a Kubernetes cluster.
+  tips_and_commands:
+    - Use `kubectl run` to create a pod and `kubectl expose` to create a service.
+    - Test service resolution with a busybox pod using `kubectl run --rm -it --image=busybox:1.28 -- nslookup <service-name>`.
+
+- question_summary: "Create a LoadBalancer service to expose a web application."
+  skills_required:
+    - Exposing applications using LoadBalancer services in Kubernetes.
+  tips_and_commands:
+    - Use `kubectl expose deployment <name> --type=LoadBalancer --port=8080` to create the service.
+    - Verify the service creation with `kubectl get svc -n <namespace>`.
+
+- question_summary: "Update a pod to change its environment variable value."
+  skills_required:
+    - Managing environment variables in Kubernetes pods.
+  tips_and_commands:
+    - Retrieve and edit the pod's definition with `kubectl get pod <name> -o yaml > pod.yaml` and `vi pod.yaml`.
+    - Apply changes with `kubectl replace -f pod.yaml --force`.
+
+- question_summary: "Add a command to a script for displaying specific pod labels using jsonpath."
+  skills_required:
+    - Manipulating and retrieving Kubernetes object properties using jsonpath queries.
+  tips_and_commands:
+    - Edit the script to include `kubectl get pod <name> -o jsonpath='{.metadata.labels.component}'` to fetch the label.
+
+- question_summary: "Create a pod that executes a sleep command and set its restart policy."
+  skills_required:
+    - Basic pod configuration and management.
+  tips_and_commands:
+    - Define the pod with the appropriate container image and command.
+    - Use `kubectl apply -f <filename>` to deploy the pod.
+
+- question_summary: "Retrieve and save all logs from a specific pod."
+  skills_required:
+    - Logs management in Kubernetes.
+  tips_and_commands:
+    - Use `kubectl logs <pod-name> > /root/<filename>` to save the logs.
+
+- question_summary: "Update permissions for a service account to restrict access to namespace information."
+  skills_required:
+    - Managing RBAC in Kubernetes.
+  tips_and_commands:
+    - Use `kubectl edit clusterrole <name>` to modify access levels.
+    - Confirm permission changes with `kubectl auth can-i get namespaces --as=system:serviceaccount:<namespace>:<service-account>`.
+- question_summary: "Troubleshoot a non-starting pod in a Kubernetes deployment."
+  skills_required:
+    - Debugging pods and deployments in Kubernetes.
+    - Managing Kubernetes secrets and environment variables.
+  tips_and_commands:
+    - First, identify the pod with issues using `kubectl get pods`.
+    - Check pod logs using `kubectl logs <pod-name>` and look for errors.
+    - Investigate related Kubernetes events with `kubectl get events --field-selector involvedObject.name=<pod-name>`.
+    - Verify and correct Kubernetes secrets and their usage within the deployment using `kubectl edit deployment <deployment-name>`.
+
+- question_summary: "Fix a misconfigured Kubernetes CronJob to run on schedule and check application availability."
+  skills_required:
+    - Configuring and debugging Kubernetes CronJobs.
+    - Network troubleshooting in Kubernetes using service endpoints.
+  tips_and_commands:
+    - Ensure the cron schedule is correct using `kubectl get cronjob <cron-name>`.
+    - Modify the cronjob with `kubectl edit cronjob <cron-name>` to correct the schedule and the command for availability checks.
+    - Use `kubectl logs <cronjob-pod-name>` to diagnose issues from the cronjob's execution.
+
+- question_summary: "Resolve a PersistentVolumeClaim (PVC) stuck in 'Pending' state."
+  skills_required:
+    - Managing Persistent Volumes and Persistent Volume Claims in Kubernetes.
+  tips_and_commands:
+    - Examine the PVC details and events affecting it with `kubectl describe pvc <pvc-name>`.
+    - Check the associated Persistent Volume's capacity and compatibility using `kubectl describe pv <pv-name>`.
+    - Adjust PVC storage requests to match available PV resources with `kubectl edit pvc <pvc-name>`.
+
+- question_summary: "Ensure a web application is only accessible from a specified pod using network policies."
+  skills_required:
+    - Implementing and debugging Kubernetes Network Policies.
+    - Ensuring proper network isolation and access controls within Kubernetes namespaces.
+  tips_and_commands:
+    - Review the existing network policy with `kubectl describe networkpolicy <policy-name> -n <namespace>`.
+    - Correct the policy to restrict access appropriately using `kubectl edit networkpolicy <policy-name> -n <namespace>`.
+    - Test connectivity from authorized and unauthorized pods using `kubectl exec <pod-name> -- curl <service-name>`.
+
+- question_summary: "Fix a pod stuck in 'Pending' state due to node affinity issues."
+  skills_required:
+    - Understanding and managing pod scheduling, node affinity, and taints in Kubernetes.
+  tips_and_commands:
+    - Use `kubectl describe pod <pod-name>` to find issues related to scheduling and node affinity.
+    - Adjust node labels to satisfy the pod's affinity requirements with `kubectl label nodes <node-name> <label-key>=<label-value>`.
+    - Optionally, modify the pod's affinity settings directly if adjusting node labels is not feasible.
+
+- question_summary: "Inspect a specific revision of a Kubernetes deployment and record the image used."
+  skills_required:
+    - Using Kubernetes rollout history to inspect deployment revisions.
+  tips_and_commands:
+    - Check the deployment's revision history with `kubectl rollout history deployment <deployment-name> -n <namespace>`.
+    - Inspect details of a specific revision using `kubectl rollout history deployment <deployment-name> --revision=<revision-number> -n <namespace>`.
+    - Record the image name from the desired revision in a text file using shell redirection.
+
+- question_summary: "Update a web application to a new version and ensure it is running."
+  skills_required:
+    - Managing image updates in Kubernetes deployments.
+    - Verifying application updates using HTTP requests.
+  tips_and_commands:
+    - Update the deployment with a new image version using `kubectl set image deployment/<deployment-name> <container-name>=<new-image>:<tag>`.
+    - Confirm the update and monitor rollout status with `kubectl rollout status deployment/<deployment-name>`.
+    - Verify the running application using `curl http://<service-external-ip>`.
+
+- question_summary: "Create a Kubernetes deployment and scale it."
+  skills_required:
+    - Basic Kubernetes deployment operations.
+  tips_and_commands:
+    - Create a new deployment using `kubectl create deployment <name> --image=<image>`.
+    - Scale the deployment to the desired number of replicas with `kubectl scale deployment <name> --replicas=<number>`.
+
+- question_summary: "Adjust a PVC's storage request and ensure it binds successfully to an available PV."
+  skills_required:
+    - Managing storage in Kubernetes using PVs and PVCs.
+  tips_and_commands:
+    - Review the current PVC and PV settings with `kubectl get pvc <pvc-name>` and `kubectl get pv <pv-name>`.
+    - Edit the PVC to request an appropriate amount of storage based on available PV capacity with `kubectl edit pvc <pvc-name>`.
+    - Reapply the PVC and check its status with `kubectl apply -f <file-name>` and `kubectl get pvc <pvc-name>`.
+
+- question_summary: "Create a PVC to use a specific PV with set access modes and a manual storage class."
+  skills_required:
+    - Configuring PVCs to bind with specific PVs in Kubernetes.
+  tips_and_commands:
+    - Define the PVC with the required access modes, storage class, and storage request using a YAML definition file.
+    - Apply the configuration with `kubectl apply -f <pvc-definition-file>.yaml`.
+    - Verify the PVC status with `kubectl get pvc <pvc-name>` to ensure it is in the 'Bound' state.
+
+- question_summary: "Create a deployment and expose it via a NodePort service."
+  skills_required:
+    - Deploying applications and exposing them through services in Kubernetes.
+  tips_and_commands:
+    - Deploy the application using `kubectl create deployment <name> --image=<image>`.
+    - Expose the deployment as a NodePort service using `kubectl expose deployment <name> --type=NodePort --port=<container-port>`.
+    - Adjust the NodePort specifically if necessary using `kubectl edit service <service-name>`.
+
+- question_summary: "Expose a deployment using a LoadBalancer service in a specific namespace."
+  skills_required:
+    - Using Kubernetes services to expose deployments externally.
+  tips_and_commands:
+    - Use `kubectl expose deployment <deployment-name> -n <namespace> --type=LoadBalancer --port=<port>` to create the service.
+    - Verify the service and external IP assignment with `kubectl get svc -n <namespace>`.
+
+- question_summary: "Create a ReplicaSet to run a specific command and store nslookup results from a pod."
+  skills_required:
+    - Configuring and managing ReplicaSets in Kubernetes.
+    - Performing DNS lookups from within Kubernetes pods to test cluster DNS configuration.
+  tips_and_commands:
+    - Define and apply a ReplicaSet configuration using a YAML file or directly with `kubectl apply -f -`.
+    - Use `kubectl exec` to perform nslookup from a pod and redirect the output to a file with `>`.
+    - Troubleshoot DNS issues by checking coredns deployment and service configurations in the `kube-system` namespace.
